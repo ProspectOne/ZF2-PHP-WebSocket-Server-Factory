@@ -2,7 +2,6 @@
 namespace WebSockets\View\Helper;
 
 use Zend\View\Helper\AbstractHelper,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,  
     Zend\ServiceManager\ServiceLocatorInterface;  
 
 /**
@@ -16,12 +15,12 @@ use Zend\View\Helper\AbstractHelper,
  * @license Zend Framework GUI licene
  * @filesource /vendor/WebSockets/src/WebSockets/View/Helper/Socket.php
  */
-class Socket extends AbstractHelper implements ServiceLocatorAwareInterface {
+class Socket extends AbstractHelper {
 
     /**
      * Service Manager instance
      * @access protected
-     * @var object $sm ServiceManager Instance object
+     * @var ServiceLocatorInterface $sm ServiceManager Instance object
      */
     protected $sm;
 
@@ -29,7 +28,7 @@ class Socket extends AbstractHelper implements ServiceLocatorAwareInterface {
      * Set the service locator. 
      * 
      * @param ServiceLocatorInterface $serviceLocator 
-     * @return CustomHelper 
+     * @return Socket
      */  
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)  
     {  
@@ -53,7 +52,7 @@ class Socket extends AbstractHelper implements ServiceLocatorAwareInterface {
      */
     public function config($key)
     {
-        $config = $this->sm->getServiceLocator()->get('Configuration')['websockets']['server'];
+        $config = $this->sm->get('Configuration')['websockets']['server'];
         if(isset($config[$key])) return $config[$key];
         else return null;
     }

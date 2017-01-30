@@ -3,7 +3,7 @@ namespace WebSockets\Factory;
 
 use WebSockets\Exception;
 use WebSockets\Service\WebsocketServer;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ApplicationFactory. Use this factory for get some client applications
@@ -22,16 +22,16 @@ class ApplicationFactory
     /**
      * Service Manager
      *
-     * @var \Zend\ServiceManager\ServiceManager $serviceManager
+     * @var ServiceManager $serviceManager
      */
     private $serviceManager;
 
     /**
      * Setup service manager
      *
-     * @param \Zend\ServiceManager\ServiceManager $serviceManager
+     * @param ServiceManager $serviceManager
      */
-    public function __construct(\Zend\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(ServiceManager $serviceManager)
     {
         $this->serviceManager = $serviceManager;
     }
@@ -46,19 +46,14 @@ class ApplicationFactory
      */
     public function dispatch($app)
     {
-        // need to provide dynamic objects creations 
-
-        //Get namespaces for application
         $config     = $this->serviceManager->get('Config');
         $namespaces = $config['websockets']['server']['applications_namespace'];
 
         foreach ($namespaces as $namespace) {
-            // checking class..
             $Client = "$namespace\\$app";
             if ( TRUE === class_exists($Client) ) {
                 $obj = new $Client(new WebsocketServer($config['websockets']['server']));
-                //Deprecated
-                if($obj instanceof ServiceLocatorAwareInterface) {
+                if(method_exists($obj, "setServiceLocator")) {
                     $obj->setServiceLocator($this->serviceManager);
                 }
             }

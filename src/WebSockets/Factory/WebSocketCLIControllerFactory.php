@@ -1,9 +1,9 @@
 <?php
-namespace WebSockets\Factory; // Namespaces of current controller
+namespace WebSockets\Factory;
 
+use Interop\Container\ContainerInterface;
 use WebSockets\Controller\WebSocketCLIController;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 /**
  * Created by IntelliJ IDEA.
  * User: jason
@@ -12,9 +12,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class WebSocketCLIControllerFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return WebSocketCLIController
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $realServiceLocator = $serviceLocator->getServiceLocator();
-        return new WebSocketCLIController($realServiceLocator);
+        return new WebSocketCLIController($container);
     }
 }
